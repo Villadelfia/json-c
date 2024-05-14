@@ -1,5 +1,5 @@
-#ifndef _JSON_H
-#define _JSON_H
+#ifndef __JSON_H
+#define __JSON_H
 
 #include <stddef.h>
 #include <stdint.h>
@@ -19,7 +19,7 @@ typedef enum {
     JSON_NULL,
     JSON_NUMBER,
     JSON_STRING
-} json_object_type_t;
+} json_node_type_t;
 
 // json_t is the main opaque type representing a json node.
 typedef struct json json_t;
@@ -100,6 +100,6 @@ const char* json_get_data(json_t* j);
 
 /* Gets the type of the json node.
  **/
-json_object_type_t json_get_type(json_t* j);
+json_node_type_t json_get_type(json_t* j);
 
 #endif

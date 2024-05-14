@@ -16,7 +16,7 @@ struct json {
     // A json_t is defined by a node type, and a null-terminated string that starts
     // at the first character that defines it. Note that this string can and will
     // continue to hold other parts of the entire json document.
-    json_object_type_t node_type;
+    json_node_type_t node_type;
     char* backing_data;
 
     // A json node usually has a path_name:
@@ -59,13 +59,13 @@ char* p_is_valid_number(char* s);
 
 // Returns a pointer to the first character after the json object or array pointed at by s or NULL if s
 // does not point to a valid json declaration of this type.
-char* p_is_valid_json(char* s, json_object_type_t t);
+char* p_is_valid_json(char* s, json_node_type_t t);
 
 // Builds a root json_t and returns it.
-json_t* p_build_root_json_node(char* data, json_object_type_t type);
+json_t* p_build_root_json_node(char* data, json_node_type_t type);
 
 // Builds a child json node and returns it.
-json_t* p_build_child_json_node(json_t* parent, char* data, char* path_name, json_object_type_t type);
+json_t* p_build_child_json_node(json_t* parent, char* data, char* path_name, json_node_type_t type);
 
 // Recursively clears the memory owned by a json node.
 void p_free_json_node(json_t* j);
@@ -222,7 +222,7 @@ char* p_is_valid_number(char* s) {
     return NULL;
 }
 
-char* p_is_valid_json(char *s, json_object_type_t t) {
+char* p_is_valid_json(char *s, json_node_type_t t) {
     if(t == JSON_OBJECT) {
         // A json object must start with {.
         if(*s != '{') return NULL;
@@ -375,7 +375,7 @@ char* p_is_valid_json(char *s, json_object_type_t t) {
     }
 }
 
-json_t* p_build_root_json_node(char* data, json_object_type_t type) {
+json_t* p_build_root_json_node(char* data, json_node_type_t type) {
     json_t* j = calloc(1, sizeof(json_t));
     if(j == NULL) {
         fprintf(stderr, "p_build_root_json_node: fatal error allocating json_t.\n");
@@ -396,7 +396,7 @@ json_t* p_build_root_json_node(char* data, json_object_type_t type) {
     return j;
 }
 
-json_t* p_build_child_json_node(json_t* parent, char* data, char* path_name, json_object_type_t type) {
+json_t* p_build_child_json_node(json_t* parent, char* data, char* path_name, json_node_type_t type) {
     json_t* j = calloc(1, sizeof(json_t));
     if(j == NULL) {
         fprintf(stderr, "p_build_child_json_node: fatal error allocating json_t.\n");
@@ -931,7 +931,7 @@ json_t* json_parse(const char* s, size_t length) {
     }
 
     // We know what type this is supposed to be now.
-    json_object_type_t type = JSON_OBJECT;
+    json_node_type_t type = JSON_OBJECT;
     if(*data == '[') type = JSON_ARRAY;
 
     // Validate the json.
@@ -1016,7 +1016,7 @@ const char* json_get_data(json_t* j) {
     return j->root->backing_data;
 }
 
-json_object_type_t json_get_type(json_t* j) {
+json_node_type_t json_get_type(json_t* j) {
     if(j == NULL) return JSON_INVALID;
     return j->node_type;
 }
